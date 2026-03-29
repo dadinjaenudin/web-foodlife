@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tantri - Aplikasi Kasir & QR Menu Bisnis Kuliner Indonesia</title>
+  <meta name="description" content="Aplikasi Kasir Bisnis Kuliner bantu pelanggan pesan dari meja dengan fitur QR Menu Order, manajemen pesanan, pembayaran, hingga laporan penjualan." />
+  <meta name="keywords" content="Aplikasi kasir, Software Kasir, Sistem Kasir, QR Menu, Point of Sales, POS Indonesia" />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- AOS Animations -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #F97316;
+      --primary-dark: #EA580C;
+      --primary-light: #FED7AA;
+      --secondary: #1E293B;
+      --accent: #FB923C;
+      --bg-light: #FFF7ED;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --gradient-start: #F97316;
+      --gradient-end: #EF4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ===== GRADIENT TEXT ===== */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-primary-custom {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      border: none;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.35);
+    }
+    .btn-primary-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(249, 115, 22, 0.5);
+      color: white;
+    }
+    .btn-outline-custom {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .btn-outline-custom:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    .btn-white-custom {
+      background: white;
+      border: none;
+      color: var(--primary);
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .btn-white-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      color: var(--primary-dark);
+    }
+
+    /* ===== NAVBAR ===== */
+    #mainNavbar {
+      background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      padding: 0;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1050;
+    }
+    #mainNavbar.scrolled {
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      height: 64px;
+      gap: 0;
+    }
+
+    /* --- Logo --- */
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      flex-shrink: 0;
+      margin-right: 24px;
+    }
+    .logo-tantri {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: #E84B26;
+      line-height: 1;
+    }
+    .logo-tantri .logo-t {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: #E84B26;
+      color: white;
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 6px;
+      margin-right: 2px;
+    }
+
+    /* --- Nav links --- */
+    .navbar-nav-main {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 2px;
+      flex: 1;
+    }
+    .navbar-nav-main > li > a,
+    .navbar-nav-main > li > button {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #374151;
+      text-decoration: none;
+      padding: 8px 13px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: color 0.18s, background 0.18s;
+      white-space: nowrap;
+      height: 64px;
+    }
+    .navbar-nav-main > li > a:hover,
+    .navbar-nav-main > li > button:hover,
+    .navbar-nav-main > li.has-mega:hover > a,
+    .navbar-nav-main > li.has-mega:hover > button {
+      color: #E84B26;
+      background: rgba(232,75,38,0.05);
+    }
+    .navbar-nav-main > li > a.active {
+      color: #E84B26;
+    }
+    .navbar-nav-main > li > a .chevron,
+    .navbar-nav-main > li > button .chevron {
+      font-size: 11px;
+      transition: transform 0.2s;
+      opacity: 0.6;
+    }
+    .navbar-nav-main > li.has-mega:hover > a .chevron,
+    .navbar-nav-main > li.has-mega:hover > button .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* --- MEGA MENU --- */
+    .mega-menu-wrap {
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 2px solid #E84B26;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.13);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .has-mega:hover .mega-menu-wrap {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .mega-menu-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 32px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0 8px;
+    }
+    .mega-menu-inner.row2 {
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid rgba(0,0,0,0.06);
+      padding-top: 24px;
+      margin-top: 0;
+    }
+    .mega-col {
+      padding: 0 12px;
+      border-right: 1px solid rgba(0,0,0,0.06);
+    }
+    .mega-col:last-child { border-right: none; }
+    .mega-col-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #E84B26;
+      margin-bottom: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .mega-col-title:hover { color: #c73d1e; }
+    .mega-col-title .arrow {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+    .mega-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .mega-col ul li a {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #374151;
+      text-decoration: none;
+      padding: 5px 0;
+      transition: color 0.15s;
+      line-height: 1.4;
+    }
+    .mega-col ul li a:hover {
+      color: #E84B26;
+    }
+
+    /* Simple dropdown (Resources) */
+    .simple-dropdown-wrap {
+      position: absolute;
+      top: 64px;
+      left: 0;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      min-width: 230px;
+      padding: 8px;
+    }
+    .has-dropdown { position: relative; }
+    .has-dropdown:hover .simple-dropdown-wrap {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .simple-dropdown-wrap a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .simple-dropdown-wrap a:hover {
+      background: rgba(232,75,38,0.06);
+      color: #E84B26;
+    }
+    .simple-dropdown-wrap a .sdd-icon {
+      width: 32px; height: 32px;
+      background: rgba(232,75,38,0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #E84B26;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    /* CTA Button */
+    .btn-hubungi {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #E84B26;
+      color: white !important;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 3px 12px rgba(232,75,38,0.3);
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+    .btn-hubungi:hover {
+      background: #c73d1e;
+      box-shadow: 0 6px 20px rgba(232,75,38,0.4);
+      transform: translateY(-1px);
+      color: white !important;
+    }
+
+    /* NEW badge */
+    .badge-new {
+      font-size: 9px;
+      font-weight: 800;
+      background: #E84B26;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.4px;
+      margin-left: 2px;
+    }
+
+    /* Toggler */
+    .navbar-toggler {
+      border: 1.5px solid rgba(232,75,38,0.5);
+      border-radius: 8px;
+      padding: 6px 10px;
+      background: none;
+      margin-left: auto;
+    }
+    .navbar-toggler:focus { box-shadow: none; outline: none; }
+    .navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(232,75,38,1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); }
+
+    /* Mobile */
+    @media (max-width: 991px) {
+      #navbarMenu {
+        padding: 12px 0;
+        border-top: 1px solid rgba(0,0,0,0.07);
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+      .navbar-nav-main {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+      }
+      .navbar-nav-main > li > a,
+      .navbar-nav-main > li > button {
+        height: auto;
+        padding: 11px 14px;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .mega-menu-wrap {
+        position: static;
+        border-top: none;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        display: none;
+      }
+      .mega-menu-wrap.mobile-open { display: block; }
+      .mega-menu-inner,
+      .mega-menu-inner.row2 {
+        grid-template-columns: 1fr;
+        padding: 8px 0;
+        gap: 0;
+      }
+      .mega-col {
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding: 8px 12px;
+      }
+      .mega-col:last-child { border-bottom: none; }
+      .simple-dropdown-wrap {
+        position: static;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        display: none;
+        padding: 4px 8px;
+      }
+      .simple-dropdown-wrap.mobile-open { display: block; }
+      .btn-hubungi { margin: 12px 14px 4px; width: calc(100% - 28px); justify-content: center; border-radius: 10px; }
+    }
+
+    /* ===== HERO SECTION ===== */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #fff7ed 0%, #ffffff 50%, #fff1e6 100%);
+      position: relative;
+      overflow: hidden;
+      padding-top: 64px;
+      display: flex;
+      align-items: center;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(239,68,68,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(239,68,68,0.08));
+      border: 1px solid rgba(249,115,22,0.3);
+      color: var(--primary-dark);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: clamp(36px, 5.5vw, 68px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .hero-stat {
+      text-align: left;
+    }
+    .hero-stat .number {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-stat .label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .hero-image-wrap {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-mockup {
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(249,115,22,0.25), 0 10px 30px rgba(0,0,0,0.1);
+      animation: heroFloat 6s ease-in-out infinite;
+      width: 100%;
+      max-width: 520px;
+    }
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(0.5deg); }
+    }
+    .floating-card {
+      position: absolute;
+      background: white;
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: floatCard 4s ease-in-out infinite;
+      z-index: 3;
+    }
+    .floating-card-1 {
+      top: 20%;
+      left: -30px;
+      animation-delay: 0s;
+    }
+    .floating-card-2 {
+      bottom: 25%;
+      right: -20px;
+      animation-delay: 2s;
+    }
+    .floating-card-3 {
+      top: 60%;
+      left: -20px;
+      animation-delay: 1s;
+    }
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ===== MARQUEE ===== */
+    .marquee-section {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      padding: 20px 0;
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 50px;
+      animation: marqueeScroll 20s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ===== SECTION STYLES ===== */
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(249,115,22,0.1);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ===== FEATURES ===== */
+    #features { padding: 100px 0; background: white; }
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px 30px;
+      height: 100%;
+      border: 1px solid rgba(0,0,0,0.07);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(249,115,22,0.04), rgba(239,68,68,0.02));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(249,115,22,0.15);
+      border-color: rgba(249,115,22,0.25);
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(239,68,68,0.08));
+      color: var(--primary);
+    }
+    .feature-card h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    #how-it-works { padding: 100px 0; background: var(--bg-light); }
+    .step-card {
+      text-align: center;
+      padding: 30px 20px;
+      position: relative;
+    }
+    .step-number {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      font-size: 24px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 25px rgba(249,115,22,0.35);
+    }
+    .step-connector {
+      position: absolute;
+      top: 50px;
+      right: -20%;
+      width: 40%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+      opacity: 0.3;
+    }
+    .step-card h5 { font-weight: 700; font-size: 17px; margin-bottom: 10px; }
+    .step-card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+
+    /* ===== BUSINESS TYPES ===== */
+    #business-types { padding: 80px 0; background: white; }
+    .biz-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border: 2px solid rgba(249,115,22,0.2);
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+    .biz-chip:hover, .biz-chip.active {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      border-color: transparent;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(249,115,22,0.3);
+    }
+    .biz-chip .biz-icon { font-size: 20px; }
+
+    /* ===== PRICING ===== */
+    #pricing { padding: 100px 0; background: var(--bg-light); }
+    .pricing-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 32px;
+      border: 2px solid rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+      height: 100%;
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--primary);
+      box-shadow: 0 20px 60px rgba(249,115,22,0.2);
+      transform: scale(1.03);
+    }
+    .pricing-card:hover:not(.featured) {
+      border-color: rgba(249,115,22,0.3);
+      box-shadow: 0 10px 40px rgba(249,115,22,0.1);
+      transform: translateY(-5px);
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      padding: 6px 20px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .pricing-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .pricing-price {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pricing-price span { font-size: 18px; font-weight: 600; vertical-align: top; margin-top: 8px; display: inline-block; }
+    .pricing-period { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
+    .pricing-features { list-style: none; padding: 0; margin: 0 0 32px; }
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 15px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .pricing-features li:last-child { border-bottom: none; }
+    .pricing-features li .check { color: var(--primary); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .pricing-features li .cross { color: #CBD5E1; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .pricing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .pricing-toggle .form-switch .form-check-input {
+      width: 52px;
+      height: 26px;
+      cursor: pointer;
+      background-color: rgba(249,115,22,0.3);
+    }
+    .pricing-toggle .form-switch .form-check-input:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    .save-badge {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    #testimonials { padding: 100px 0; background: white; }
+    .testimonial-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid rgba(0,0,0,0.08);
+      height: 100%;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 50px rgba(249,115,22,0.12);
+      border-color: rgba(249,115,22,0.2);
+    }
+    .testimonial-card::before {
+      content: '\201C';
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-size: 80px;
+      color: rgba(249,115,22,0.1);
+      font-family: serif;
+      line-height: 1;
+    }
+    .testimonial-stars { color: #F59E0B; font-size: 14px; margin-bottom: 16px; }
+    .testimonial-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+    .testimonial-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .testimonial-name { font-weight: 700; font-size: 15px; }
+    .testimonial-role { font-size: 13px; color: var(--text-muted); }
+
+    /* ===== FAQ ===== */
+    #faq { padding: 100px 0; background: var(--bg-light); }
+    .faq-item {
+      background: white;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0,0,0,0.07);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .faq-item.active {
+      border-color: rgba(249,115,22,0.3);
+      box-shadow: 0 4px 20px rgba(249,115,22,0.1);
+    }
+    .faq-question {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .faq-question:hover { color: var(--primary); }
+    .faq-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(249,115,22,0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    .faq-item.active .faq-icon {
+      background: var(--primary);
+      color: white;
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      padding: 0 24px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .faq-answer.open {
+      max-height: 300px;
+      padding: 0 24px 20px;
+    }
+
+    /* ===== CTA SECTION ===== */
+    #cta {
+      padding: 100px 0;
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(249,115,22,0.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    #cta::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    /* ===== FOOTER ===== */
+    #footer {
+      background: #0F172A;
+      color: rgba(255,255,255,0.7);
+      padding: 80px 0 30px;
+    }
+    .footer-logo { font-size: 32px; font-weight: 800; margin-bottom: 16px; }
+    .footer-desc { font-size: 15px; line-height: 1.7; max-width: 300px; margin-bottom: 24px; }
+    .footer-social a {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 18px;
+      transition: all 0.3s ease;
+      margin-right: 8px;
+      text-decoration: none;
+    }
+    .footer-social a:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
+    .footer-heading {
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-divider {
+      border-color: rgba(255,255,255,0.08);
+      margin: 40px 0 24px;
+    }
+    .footer-bottom {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ===== COUNTER ANIMATION ===== */
+    .counter-value { display: inline; }
+
+    /* ===== SCROLL TO TOP ===== */
+    #scrollTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(249,115,22,0.4);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+    #scrollTop.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #scrollTop:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(249,115,22,0.5); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 991px) {
+      #hero { padding: 120px 0 60px; }
+      .hero-stats { gap: 20px; }
+      .hero-image-wrap { margin-top: 40px; }
+      .floating-card { display: none; }
+      .pricing-card.featured { transform: scale(1); }
+      .step-connector { display: none; }
+    }
+    @media (max-width: 576px) {
+      .hero-stats { flex-wrap: wrap; gap: 16px; }
+      .hero-stat { min-width: 120px; }
+    }
+
+    /* ===== LOADING ANIMATION ===== */
+    .fade-up { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== VIDEO MOCK ===== */
+    .video-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border-radius: 50px;
+      padding: 10px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .video-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(249,115,22,0.2);
+    }
+    .play-btn {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+    }
+
+    /* ===== LOGO PARTNERS ===== */
+    .partner-logo {
+      filter: grayscale(100%);
+      opacity: 0.4;
+      transition: all 0.3s ease;
+      height: 36px;
+      object-fit: contain;
+    }
+    .partner-logo:hover { filter: grayscale(0%); opacity: 1; }
+
+    /* ===== APP STORE BUTTONS ===== */
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .store-btn:hover {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transform: translateY(-2px);
+    }
+    .store-btn .store-icon { font-size: 28px; }
+    .store-btn .store-text small { display: block; font-size: 10px; opacity: 0.7; }
+    .store-btn .store-text strong { font-size: 16px; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="mainNavbar">
+  <div class="container">
+    <div class="navbar-inner">
+
+      <!-- ── Logo ── -->
+      <a class="navbar-brand" href="#">
+        <span class="logo-tantri">
+          <span class="logo-t">T</span>antri
+        </span>
+      </a>
+
+      <!-- ── Hamburger (mobile) ── -->
+      <button class="navbar-toggler d-lg-none" id="navToggler" type="button" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- ── Nav Menu ── -->
+      <div id="navbarMenu" class="d-none d-lg-flex align-items-center w-100">
+
+        <ul class="navbar-nav-main">
+
+          <!-- Home -->
+          <li>
+            <a href="#" class="active">Home</a>
+          </li>
+
+          <!-- Fitur Tantri → MEGA MENU (10 kolom, 2 baris) -->
+          <li class="has-mega">
+            <a href="#features">Fitur Tantri <i class="bi bi-chevron-down chevron"></i></a>
+
+            <div class="mega-menu-wrap">
+              <!-- Row 1 -->
+              <div class="mega-menu-inner">
+
+                <!-- Order Management -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Order Management <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">QR Menu Order</a></li>
+                    <li><a href="#features">Manajemen Pesanan</a></li>
+                    <li><a href="#features">Integrasi Pembayaran Digital</a></li>
+                    <li><a href="#features">Manajemen Reservasi</a></li>
+                    <li><a href="#features">Electronic Receipt</a></li>
+                  </ul>
+                </div>
+
+                <!-- Point of Sales -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Point of Sales <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">POS Digital</a></li>
+                    <li><a href="#features">Laporan Keuangan</a></li>
+                    <li><a href="#features">Laporan Penjualan</a></li>
+                    <li><a href="#features">Menu Orderan</a></li>
+                    <li><a href="#features">Data Pelanggan</a></li>
+                    <li><a href="#features">Reservasi</a></li>
+                  </ul>
+                </div>
+
+                <!-- Backoffice -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Backoffice <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Dashboard Backoffice</a></li>
+                    <li><a href="#features">Manajemen Multi-outlet</a></li>
+                    <li><a href="#features">Manajemen Karyawan</a></li>
+                  </ul>
+                </div>
+
+                <!-- Inventory -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Inventory <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Daftar Stok</a></li>
+                    <li><a href="#features">Stok Opname</a></li>
+                    <li><a href="#features">Pembelian Stok</a></li>
+                    <li><a href="#features">Daftar Pemasok</a></li>
+                    <li><a href="#features">Distribusi Stok</a></li>
+                  </ul>
+                </div>
+
+                <!-- Table Management -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Table Management <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Floor Management</a></li>
+                    <li><a href="#features">Table Management</a></li>
+                  </ul>
+                </div>
+
+              </div><!-- /Row 1 -->
+
+              <!-- Row 2 -->
+              <div class="mega-menu-inner row2">
+
+                <!-- Shifting -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Shifting <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Atur Jadwal Shift</a></li>
+                    <li><a href="#features">Absensi (Selfie &amp; Geotagging)</a></li>
+                    <li><a href="#features">Laporan Absensi</a></li>
+                    <li><a href="#features">Summary Report per Shift</a></li>
+                  </ul>
+                </div>
+
+                <!-- PIN Authentication -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">PIN Authentication <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Pengaturan PIN Auth</a></li>
+                    <li><a href="#features">Log PIN Auth</a></li>
+                  </ul>
+                </div>
+
+                <!-- Voucher Diskon -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Voucher Diskon <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Voucher Umum</a></li>
+                    <li><a href="#features">Voucher Khusus</a></li>
+                    <li><a href="#features">Voucher Product</a></li>
+                  </ul>
+                </div>
+
+                <!-- After Sales – Promosi Digital -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">After Sales – Promosi Digital <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Artikel SEO</a></li>
+                    <li><a href="#features">Konten Sosial Media</a></li>
+                    <li><a href="#features">Mini Website Cafe &amp; Resto</a></li>
+                  </ul>
+                </div>
+
+                <!-- Bill dan Payment -->
+                <div class="mega-col">
+                  <a href="#features" class="mega-col-title">Bill dan Payment <span class="arrow">→</span></a>
+                  <ul>
+                    <li><a href="#features">Open Bill/Close Bill</a></li>
+                    <li><a href="#features">Save Bill/Split Bill</a></li>
+                    <li><a href="#features">Split Payment</a></li>
+                  </ul>
+                </div>
+
+              </div><!-- /Row 2 -->
+            </div><!-- /mega-menu-wrap -->
+          </li>
+
+          <!-- Tentang Tantri -->
+          <li>
+            <a href="#how-it-works">Tentang Tantri</a>
+          </li>
+
+          <!-- Food Bazaar -->
+          <li>
+            <a href="#business-types">Food Bazaar <span class="badge-new">NEW</span></a>
+          </li>
+
+          <!-- Resources (simple dropdown) -->
+          <li class="has-dropdown">
+            <a href="#">Resources <i class="bi bi-chevron-down chevron"></i></a>
+            <div class="simple-dropdown-wrap">
+              <a href="#">
+                <span class="sdd-icon"><i class="bi bi-book-fill"></i></span>
+                Panduan Pengguna
+              </a>
+              <a href="#">
+                <span class="sdd-icon"><i class="bi bi-play-circle-fill"></i></span>
+                Video Tutorial
+              </a>
+              <a href="#">
+                <span class="sdd-icon"><i class="bi bi-newspaper"></i></span>
+                Blog &amp; Artikel
+              </a>
+              <a href="#faq">
+                <span class="sdd-icon"><i class="bi bi-question-circle-fill"></i></span>
+                FAQ
+              </a>
+            </div>
+          </li>
+
+          <!-- Harga -->
+          <li>
+            <a href="#pricing">Harga</a>
+          </li>
+
+        </ul>
+
+        <!-- CTA -->
+        <a href="#" class="btn-hubungi ms-auto">
+          Hubungi Kami
+        </a>
+
+      </div><!-- /navbarMenu -->
+    </div><!-- /navbar-inner -->
+  </div><!-- /container -->
+</nav>
+
+<!-- ===== HERO SECTION ===== -->
+<section id="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6" data-aos="fade-right" data-aos-duration="800">
+        <div class="hero-badge">
+          <i class="bi bi-star-fill"></i>
+          #1 Aplikasi Kasir Kuliner Indonesia
+        </div>
+        <h1 class="hero-title">
+          Kasir Pintar &amp;<br>
+          <span class="gradient-text">QR Menu Digital</span><br>
+          Untuk Bisnis Kuliner
+        </h1>
+        <p class="hero-subtitle">
+          Bantu pelanggan pesan langsung dari meja dengan QR Menu. Kelola pesanan, pembayaran, dan laporan penjualan dalam satu platform terintegrasi.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="#" class="btn btn-primary-custom">
+            <i class="bi bi-rocket-takeoff me-2"></i>Mulai Gratis 30 Hari
+          </a>
+          <div class="video-badge">
+            <div class="play-btn"><i class="bi bi-play-fill"></i></div>
+            Lihat Demo
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="number"><span class="counter" data-target="15000">0</span>+</div>
+            <div class="label">Outlet Aktif</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number"><span class="counter" data-target="2500000">0</span>+</div>
+            <div class="label">Transaksi/Bulan</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number"><span class="counter" data-target="34">0</span> Kota</div>
+            <div class="label">Tersedia di Seluruh Indonesia</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+        <div class="hero-image-wrap text-center">
+          <img
+            src="https://sspark.genspark.ai/cfimages?u1=iAEN9KFUnCO2U8e9SV%2Frt3Z4gu2Jz4qyNbLPv7b%2BRGi3dG1BYV9G3F3gWnIBhZeIdWjsziAMZCU4RejHJ%2FHCPX67n02Cyk%2BTxFQGOg7e5XYy%2BXT%2FkA9Zfiq6hS73hoIbW6Hi&u2=bZ4MIo7ySCauf47j&width=2560"
+            alt="Tantri App Dashboard"
+            class="hero-mockup"
+          />
+          <!-- Floating Cards -->
+          <div class="floating-card floating-card-1">
+            <span style="font-size:22px">🧾</span>
+            <div>
+              <div style="font-size:11px;color:var(--text-muted)">Pesanan Masuk</div>
+              <div style="font-size:14px;font-weight:800;color:var(--primary)">+24 Hari Ini</div>
+            </div>
+          </div>
+          <div class="floating-card floating-card-2">
+            <span style="font-size:22px">💰</span>
+            <div>
+              <div style="font-size:11px;color:var(--text-muted)">Pendapatan</div>
+              <div style="font-size:14px;font-weight:800;color:#10B981">Rp 4.2 Juta</div>
+            </div>
+          </div>
+          <div class="floating-card floating-card-3">
+            <span style="font-size:22px">⭐</span>
+            <div>
+              <div style="font-size:11px;color:var(--text-muted)">Rating Aplikasi</div>
+              <div style="font-size:14px;font-weight:800;color:#F59E0B">4.9 / 5.0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MARQUEE ===== -->
+<div class="marquee-section">
+  <div style="display:flex;overflow:hidden">
+    <div class="marquee-track" id="marqueeTrack">
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> QR Menu Order</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Manajemen Pesanan</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Laporan Penjualan</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Pembayaran Digital</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Multi Outlet</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Manajemen Stok</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Customer Loyalty</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Integrasi QRIS</div>
+      <!-- Duplicate for infinite loop -->
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> QR Menu Order</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Manajemen Pesanan</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Laporan Penjualan</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Pembayaran Digital</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Multi Outlet</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Manajemen Stok</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Customer Loyalty</div>
+      <div class="marquee-item"><i class="bi bi-check-circle-fill"></i> Integrasi QRIS</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FEATURES SECTION ===== -->
+<section id="features">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-tag"><i class="bi bi-lightning-charge-fill"></i> Fitur Unggulan</div>
+      <h2 class="section-title">Semua yang Kamu Butuhkan<br>Ada di <span class="gradient-text">Satu Aplikasi</span></h2>
+      <p class="section-subtitle">Platform kasir lengkap dengan teknologi QR Menu yang membantu bisnis kuliner kamu tumbuh lebih cepat dan efisien.</p>
+    </div>
+    <div class="row g-4">
+      <!-- Feature 1 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-qr-code-scan"></i></div>
+          <h4>QR Menu Digital</h4>
+          <p>Pelanggan scan QR, pilih menu, dan pesan langsung dari meja tanpa perlu antri. Hemat waktu & lebih higienis.</p>
+        </div>
+      </div>
+      <!-- Feature 2 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-receipt-cutoff"></i></div>
+          <h4>Kasir & POS Canggih</h4>
+          <p>Proses transaksi cepat dengan antarmuka kasir yang intuitif. Mendukung berbagai metode pembayaran digital dan tunai.</p>
+        </div>
+      </div>
+      <!-- Feature 3 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
+          <h4>Laporan & Analitik</h4>
+          <p>Pantau performa bisnis dengan laporan penjualan real-time, analisis produk terlaris, dan tren pendapatan harian.</p>
+        </div>
+      </div>
+      <!-- Feature 4 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-box-seam"></i></div>
+          <h4>Manajemen Stok</h4>
+          <p>Monitor stok bahan baku secara otomatis. Dapatkan notifikasi saat stok menipis agar operasional tidak terganggu.</p>
+        </div>
+      </div>
+      <!-- Feature 5 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-credit-card-2-front"></i></div>
+          <h4>QRIS & Dompet Digital</h4>
+          <p>Terima pembayaran via QRIS, GoPay, OVO, Dana, LinkAja, dan transfer bank dalam satu dashboard terintegrasi.</p>
+        </div>
+      </div>
+      <!-- Feature 6 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-people-fill"></i></div>
+          <h4>Program Loyalitas</h4>
+          <p>Tingkatkan retensi pelanggan dengan poin reward, voucher diskon, dan membership yang bisa dikustomisasi.</p>
+        </div>
+      </div>
+      <!-- Feature 7 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-shop-window"></i></div>
+          <h4>Multi Outlet</h4>
+          <p>Kelola banyak cabang dalam satu akun. Monitor performa setiap outlet dari mana saja secara real-time.</p>
+        </div>
+      </div>
+      <!-- Feature 8 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-headset"></i></div>
+          <h4>Support 24/7</h4>
+          <p>Tim support kami siap membantu kamu kapan saja melalui live chat, WhatsApp, dan email dengan respons cepat.</p>
+        </div>
+      </div>
+      <!-- Feature 9 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+          <h4>Cloud & Sinkronisasi</h4>
+          <p>Data tersimpan aman di cloud. Akses laporan dan kelola bisnis dari smartphone, tablet, maupun komputer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-tag"><i class="bi bi-diagram-3-fill"></i> Cara Kerja</div>
+      <h2 class="section-title">Mulai dalam <span class="gradient-text">4 Langkah Mudah</span></h2>
+      <p class="section-subtitle">Tidak perlu keahlian teknis. Setup bisnis kamu dalam hitungan menit dan langsung mulai melayani pelanggan.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="step-card position-relative">
+          <div class="step-number">1</div>
+          <div class="step-connector d-none d-lg-block"></div>
+          <h5>Daftar Akun</h5>
+          <p>Buat akun Tantri gratis, tidak perlu kartu kredit. Proses daftar hanya 2 menit.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="150">
+        <div class="step-card position-relative">
+          <div class="step-number">2</div>
+          <div class="step-connector d-none d-lg-block"></div>
+          <h5>Setup Menu</h5>
+          <p>Upload foto dan atur harga menu kamu dengan mudah melalui dashboard admin yang intuitif.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="step-card position-relative">
+          <div class="step-number">3</div>
+          <div class="step-connector d-none d-lg-block"></div>
+          <h5>Print QR Code</h5>
+          <p>Generate dan cetak QR Code untuk setiap meja. Tempel di meja dan langsung siap digunakan.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="450">
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h5>Terima Pesanan</h5>
+          <p>Pelanggan scan QR dan langsung pesan. Pesanan otomatis masuk ke dapur dan kasir kamu.</p>
+        </div>
+      </div>
+    </div>
+    <!-- App Screenshot -->
+    <div class="row mt-5 align-items-center" data-aos="fade-up">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <img
+          src="https://sspark.genspark.ai/cfimages?u1=dqr2gVXMBW6aESUxXav7hzm5670sMVZBbil7WhrRvHXWDcVV%2BxngxM9d4FGwCQZ5UVVKeH7mIt58bH4ZrsbLeyvAS88xg9H3M9uGlI8LNoRHLWsegQVdr8YhhhpTT9Wn6g94yrabTvONF0b1YHj7ZGLyjscJhW3%2F1KMr0iWBykJ5sK%2B%2B&u2=ThNKbHIGbYyE1cX1&width=2560"
+          alt="QR Menu Demo"
+          class="img-fluid rounded-4"
+          style="box-shadow: 0 20px 60px rgba(249,115,22,0.2);"
+        />
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="section-tag mb-3"><i class="bi bi-qr-code"></i> QR Menu Digital</div>
+        <h3 class="section-title text-start">Pelanggan Pesan Sendiri,<br>Kamu Fokus <span class="gradient-text">Masak & Melayani</span></h3>
+        <p class="text-muted mb-4">Eliminasi antrian di kasir. Pelanggan cukup scan QR code di meja, lihat menu lengkap dengan foto, dan langsung pesan—semua tanpa kertas.</p>
+        <ul class="list-unstyled">
+          <li class="d-flex align-items-start gap-3 mb-3">
+            <div style="min-width:28px;height:28px;background:linear-gradient(135deg,#F97316,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;"><i class="bi bi-check"></i></div>
+            <span>Menu update real-time — ubah harga & stok langsung tampil ke pelanggan</span>
+          </li>
+          <li class="d-flex align-items-start gap-3 mb-3">
+            <div style="min-width:28px;height:28px;background:linear-gradient(135deg,#F97316,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;"><i class="bi bi-check"></i></div>
+            <span>Pesanan langsung masuk ke display dapur & printer struk otomatis</span>
+          </li>
+          <li class="d-flex align-items-start gap-3 mb-3">
+            <div style="min-width:28px;height:28px;background:linear-gradient(135deg,#F97316,#EF4444);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;"><i class="bi bi-check"></i></div>
+            <span>Pelanggan bisa bayar langsung via QRIS dari smartphone mereka</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUSINESS TYPES ===== -->
+<section id="business-types">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-tag"><i class="bi bi-grid-fill"></i> Jenis Bisnis</div>
+      <h2 class="section-title">Cocok untuk Semua<br><span class="gradient-text">Jenis Bisnis Kuliner</span></h2>
+      <p class="section-subtitle">Dari warung kecil hingga restoran chain besar, Tantri siap mendukung pertumbuhan bisnis kamu.</p>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-3 mb-5" data-aos="fade-up" data-aos-delay="100">
+      <div class="biz-chip active"><span class="biz-icon">🍜</span> Restoran</div>
+      <div class="biz-chip"><span class="biz-icon">☕</span> Kafe & Coffee Shop</div>
+      <div class="biz-chip"><span class="biz-icon">🍕</span> Pizzeria</div>
+      <div class="biz-chip"><span class="biz-icon">🧁</span> Bakery & Pastry</div>
+      <div class="biz-chip"><span class="biz-icon">🍱</span> Warteg & Warung Makan</div>
+      <div class="biz-chip"><span class="biz-icon">🥤</span> Minuman & Jus</div>
+      <div class="biz-chip"><span class="biz-icon">🍦</span> Dessert Shop</div>
+      <div class="biz-chip"><span class="biz-icon">🍣</span> Restoran Jepang</div>
+      <div class="biz-chip"><span class="biz-icon">🔥</span> BBQ & Grill</div>
+      <div class="biz-chip"><span class="biz-icon">🏠</span> Cloud Kitchen</div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="rounded-4 p-4 h-100" style="background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border:1px solid rgba(249,115,22,0.15)">
+          <div style="font-size:48px;margin-bottom:16px">🏪</div>
+          <h5 style="font-weight:800">Usaha Kecil & UMKM</h5>
+          <p class="text-muted">Paket terjangkau untuk warung, kantin, dan UMKM kuliner yang ingin go digital tanpa biaya mahal.</p>
+          <div style="color:var(--primary);font-weight:700;font-size:14px">Mulai dari Rp 99.000/bulan →</div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="150">
+        <div class="rounded-4 p-4 h-100" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border:1px solid rgba(16,185,129,0.15)">
+          <div style="font-size:48px;margin-bottom:16px">🏢</div>
+          <h5 style="font-weight:800">Restoran & Kafe</h5>
+          <p class="text-muted">Solusi lengkap untuk restoran dan kafe dengan fitur QR Menu, manajemen meja, dan laporan advanced.</p>
+          <div style="color:#10B981;font-weight:700;font-size:14px">Mulai dari Rp 299.000/bulan →</div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="rounded-4 p-4 h-100" style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border:1px solid rgba(59,130,246,0.15)">
+          <div style="font-size:48px;margin-bottom:16px">🏗️</div>
+          <h5 style="font-weight:800">Chain & Multi Outlet</h5>
+          <p class="text-muted">Platform enterprise untuk bisnis chain dengan puluhan hingga ratusan outlet. Kelola semuanya dalam satu dashboard.</p>
+          <div style="color:#3B82F6;font-weight:700;font-size:14px">Hubungi tim sales kami →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING SECTION ===== -->
+<section id="pricing">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-tag"><i class="bi bi-tag-fill"></i> Harga</div>
+      <h2 class="section-title">Pilih Paket yang<br><span class="gradient-text">Sesuai Bisnis Kamu</span></h2>
+      <p class="section-subtitle">Transparansi harga tanpa biaya tersembunyi. Mulai gratis, upgrade kapan saja.</p>
+      <!-- Toggle -->
+      <div class="pricing-toggle mt-4">
+        <span style="font-weight:600">Bulanan</span>
+        <div class="form-check form-switch mb-0">
+          <input class="form-check-input" type="checkbox" id="pricingToggle" />
+        </div>
+        <span style="font-weight:600">Tahunan <span class="save-badge">Hemat 20%</span></span>
+      </div>
+    </div>
+    <div class="row g-4 align-items-center justify-content-center">
+      <!-- Starter -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="pricing-card">
+          <div class="pricing-name">Starter</div>
+          <div class="pricing-price gradient-text">
+            <span>Rp</span><span class="price-amount" data-monthly="99" data-yearly="79">99</span>K
+          </div>
+          <div class="pricing-period">/bulan, 1 outlet</div>
+          <ul class="pricing-features">
+            <li><i class="bi bi-check-circle-fill check"></i> QR Menu Digital (maks 50 menu)</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Kasir & POS Dasar</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Laporan Harian</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Pembayaran QRIS</li>
+            <li><i class="bi bi-x-circle cross"></i> Multi Outlet</li>
+            <li><i class="bi bi-x-circle cross"></i> Program Loyalitas</li>
+            <li><i class="bi bi-x-circle cross"></i> API Integration</li>
+          </ul>
+          <a href="#" class="btn btn-outline-custom w-100">Mulai Gratis</a>
+        </div>
+      </div>
+      <!-- Pro (Featured) -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="150">
+        <div class="pricing-card featured">
+          <div class="pricing-badge">⭐ TERPOPULER</div>
+          <div class="pricing-name" style="color:var(--primary)">Pro</div>
+          <div class="pricing-price gradient-text">
+            <span>Rp</span><span class="price-amount" data-monthly="299" data-yearly="239">299</span>K
+          </div>
+          <div class="pricing-period">/bulan, hingga 3 outlet</div>
+          <ul class="pricing-features">
+            <li><i class="bi bi-check-circle-fill check"></i> QR Menu Digital (unlimited)</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Kasir & POS Lengkap</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Laporan & Analitik Advanced</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Semua Metode Pembayaran</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Multi Outlet (3 cabang)</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Program Loyalitas</li>
+            <li><i class="bi bi-x-circle cross"></i> API Integration</li>
+          </ul>
+          <a href="#" class="btn btn-primary-custom w-100">Coba 30 Hari Gratis</a>
+        </div>
+      </div>
+      <!-- Enterprise -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="pricing-card">
+          <div class="pricing-name">Enterprise</div>
+          <div class="pricing-price gradient-text" style="font-size:36px">
+            Custom
+          </div>
+          <div class="pricing-period">/bulan, outlet tidak terbatas</div>
+          <ul class="pricing-features">
+            <li><i class="bi bi-check-circle-fill check"></i> Semua fitur Pro</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Outlet Tidak Terbatas</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Dedicated Account Manager</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Custom Branding & White Label</li>
+            <li><i class="bi bi-check-circle-fill check"></i> API Integration Penuh</li>
+            <li><i class="bi bi-check-circle-fill check"></i> SLA Priority Support</li>
+            <li><i class="bi bi-check-circle-fill check"></i> Pelatihan Tim Gratis</li>
+          </ul>
+          <a href="#" class="btn btn-outline-custom w-100">Hubungi Sales</a>
+        </div>
+      </div>
+    </div>
+    <!-- Guarantee -->
+    <div class="text-center mt-5" data-aos="fade-up">
+      <p class="text-muted"><i class="bi bi-shield-check-fill" style="color:var(--primary)"></i> &nbsp;Garansi uang kembali 30 hari &nbsp;|&nbsp; <i class="bi bi-lock-fill" style="color:var(--primary)"></i> &nbsp;Data aman terenkripsi &nbsp;|&nbsp; <i class="bi bi-x-circle" style="color:var(--primary)"></i> &nbsp;Tidak ada kontrak jangka panjang</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section id="testimonials">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-tag"><i class="bi bi-chat-quote-fill"></i> Testimoni</div>
+      <h2 class="section-title">Dipercaya Ribuan<br><span class="gradient-text">Pemilik Bisnis Kuliner</span></h2>
+      <p class="section-subtitle">Dengarkan langsung cerita sukses para pebisnis kuliner yang sudah menggunakan Tantri.</p>
+    </div>
+    <div class="row g-4">
+      <!-- Testimoni 1 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Sejak pakai Tantri, antrian kasir berkurang drastis. Pelanggan suka banget bisa pesan sendiri dari meja. Omset naik 35% dalam 2 bulan pertama!"</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <div class="testimonial-name">Andi Prasetyo</div>
+              <div class="testimonial-role">Owner Warung Nasi Padang, Jakarta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimoni 2 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Laporan penjualannya lengkap banget! Saya bisa tahu menu apa yang paling laku, jam sibuk kapan, dan analisis customer. Sangat membantu untuk keputusan bisnis."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#8B5CF6,#7C3AED)">S</div>
+            <div>
+              <div class="testimonial-name">Sinta Maharani</div>
+              <div class="testimonial-role">Manager Kafe Kekinian, Bandung</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimoni 3 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+          </div>
+          <p class="testimonial-text">"Setup-nya gampang banget, dalam 1 jam sudah langsung bisa operasional. Tim support Tantri juga responsif, masalah apapun langsung dibantu."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">R</div>
+            <div>
+              <div class="testimonial-name">Reza Firmansyah</div>
+              <div class="testimonial-role">Owner Pizza Lovers, Surabaya</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimoni 4 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Fitur multi outlet-nya keren! Saya punya 5 cabang dan bisa monitor semua dari HP. Tidak perlu lagi ke setiap cabang buat cek laporan harian."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706)">D</div>
+            <div>
+              <div class="testimonial-name">Dewi Kusuma</div>
+              <div class="testimonial-role">Owner Chain Bakery, Yogyakarta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimoni 5 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Harganya sangat worth it! Fitur QRIS terintegrasi langsung, jadi tidak perlu alat EDC tambahan. Customer juga suka karena bayar jadi lebih praktis."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#EF4444,#DC2626)">B</div>
+            <div>
+              <div class="testimonial-name">Budi Santoso</div>
+              <div class="testimonial-role">Owner Warung Soto, Semarang</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimoni 6 -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Program loyalitas pelanggannya efektif banget! Repeat order meningkat signifikan karena pelanggan semangat kumpulkan poin buat dapat reward."</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="testimonial-avatar" style="background:linear-gradient(135deg,#06B6D4,#0891B2)">N</div>
+            <div>
+              <div class="testimonial-name">Nadia Putri</div>
+              <div class="testimonial-role">Owner Dessert House, Bali</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ SECTION ===== -->
+<section id="faq">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center mb-5" data-aos="fade-up">
+          <div class="section-tag"><i class="bi bi-question-circle-fill"></i> FAQ</div>
+          <h2 class="section-title">Pertanyaan yang<br><span class="gradient-text">Sering Ditanyakan</span></h2>
+        </div>
+        <div id="faqContainer" data-aos="fade-up" data-aos-delay="100">
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Apakah ada biaya setup atau biaya tersembunyi?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Tidak ada biaya setup dan tidak ada biaya tersembunyi sama sekali. Kamu hanya membayar biaya berlangganan bulanan atau tahunan sesuai paket yang dipilih. Tidak ada komisi per transaksi, tidak ada biaya aktivasi, dan tidak ada kontrak jangka panjang.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Bagaimana cara kerja QR Menu Digital?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Setiap meja mendapatkan QR code unik. Pelanggan cukup scan QR code menggunakan kamera smartphone (tidak perlu download aplikasi), lalu menu digital akan muncul di browser mereka. Pelanggan bisa memilih menu, menambahkan ke keranjang, dan melakukan pembayaran langsung dari smartphone mereka.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Apakah bisa digunakan tanpa koneksi internet?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Tantri memiliki fitur offline mode untuk kasir. Jika koneksi internet terputus, kamu masih bisa memproses transaksi dan data akan otomatis tersinkronisasi saat koneksi kembali. Namun untuk fitur QR Menu, koneksi internet diperlukan agar pelanggan bisa mengakses menu digital.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Berapa lama proses setup dan onboarding?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Proses setup sangat cepat! Rata-rata bisnis bisa mulai beroperasi dalam 1-2 jam setelah daftar. Tim onboarding kami akan memandu kamu melalui proses setup menu, konfigurasi kasir, dan cara mencetak QR code. Kami juga menyediakan video tutorial dan dokumentasi lengkap.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Metode pembayaran apa saja yang didukung?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Tantri mendukung berbagai metode pembayaran: Tunai, QRIS (semua e-wallet), GoPay, OVO, Dana, LinkAja, ShopeePay, Transfer Bank (BCA, BNI, BRI, Mandiri), Kartu Debit/Kredit (Visa/Mastercard), dan Paylater. Semua terpusat di satu dashboard pelaporan.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Apakah data saya aman di Tantri?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Keamanan data adalah prioritas kami. Semua data dienkripsi menggunakan SSL/TLS 256-bit dan disimpan di server berstandar ISO 27001. Kami melakukan backup otomatis setiap hari dan memiliki uptime 99.9%. Data kamu tidak akan pernah dijual atau dibagikan ke pihak ketiga.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Bagaimana jika saya ingin berhenti berlangganan?</span>
+              <div class="faq-icon"><i class="bi bi-plus"></i></div>
+            </div>
+            <div class="faq-answer">
+              Kamu bisa berhenti berlangganan kapan saja tanpa denda atau penalti. Untuk paket bulanan, kamu masih bisa menggunakan layanan hingga akhir periode berlangganan. Kami juga memberikan garansi uang kembali 30 hari jika kamu tidak puas dengan layanan kami.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section id="cta">
+  <div class="container position-relative" style="z-index:2">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8" data-aos="fade-up">
+        <div class="section-tag d-inline-flex" style="background:rgba(249,115,22,0.2);color:#FB923C;margin-bottom:24px">
+          <i class="bi bi-rocket-takeoff-fill"></i> Mulai Sekarang
+        </div>
+        <h2 class="section-title text-white mb-4">
+          Siap Tingkatkan Bisnis Kuliner<br>Kamu Bersama <span class="gradient-text">Tantri?</span>
+        </h2>
+        <p style="color:rgba(255,255,255,0.7);font-size:18px;margin-bottom:40px;line-height:1.7">
+          Bergabung dengan 15.000+ pemilik bisnis kuliner yang sudah mempercayakan operasional mereka kepada Tantri. Mulai gratis selama 30 hari, tidak perlu kartu kredit.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+          <a href="#" class="btn btn-primary-custom btn-lg">
+            <i class="bi bi-rocket-takeoff me-2"></i> Coba Gratis 30 Hari
+          </a>
+          <a href="#" class="btn btn-white-custom btn-lg" style="color:var(--primary)">
+            <i class="bi bi-telephone me-2"></i> Konsultasi Gratis
+          </a>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-4">
+          <a href="#" class="store-btn">
+            <i class="bi bi-apple store-icon"></i>
+            <div class="store-text">
+              <small>Download di</small>
+              <strong>App Store</strong>
+            </div>
+          </a>
+          <a href="#" class="store-btn">
+            <i class="bi bi-google-play store-icon"></i>
+            <div class="store-text">
+              <small>Dapatkan di</small>
+              <strong>Google Play</strong>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer id="footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-logo gradient-text">tantri.id</div>
+        <p class="footer-desc">Aplikasi kasir dan QR menu terdepan untuk bisnis kuliner Indonesia. Dipercaya oleh lebih dari 15.000 outlet di seluruh Indonesia.</p>
+        <div class="footer-social">
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+          <a href="#"><i class="bi bi-youtube"></i></a>
+          <a href="#"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Produk</div>
+        <ul class="footer-links">
+          <li><a href="#">QR Menu</a></li>
+          <li><a href="#">Aplikasi Kasir</a></li>
+          <li><a href="#">Manajemen Stok</a></li>
+          <li><a href="#">Laporan Penjualan</a></li>
+          <li><a href="#">Program Loyalitas</a></li>
+          <li><a href="#">Multi Outlet</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Perusahaan</div>
+        <ul class="footer-links">
+          <li><a href="#">Tentang Kami</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Karir</a></li>
+          <li><a href="#">Mitra</a></li>
+          <li><a href="#">Hubungi Kami</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Bantuan</div>
+        <ul class="footer-links">
+          <li><a href="#">Pusat Bantuan</a></li>
+          <li><a href="#">Tutorial</a></li>
+          <li><a href="#">Status Layanan</a></li>
+          <li><a href="#">Komunitas</a></li>
+          <li><a href="#">API Docs</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Syarat & Ketentuan</a></li>
+          <li><a href="#">Kebijakan Privasi</a></li>
+          <li><a href="#">Kebijakan Cookie</a></li>
+          <li><a href="#">Lisensi</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 footer-bottom">
+      <div>© 2024 Tantri.id — PT Tantri Teknologi Indonesia. Hak cipta dilindungi.</div>
+      <div class="d-flex align-items-center gap-3">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/32px-Flag_of_Japan.svg.png" alt="" style="height:16px;display:none">
+        <span><i class="bi bi-geo-alt-fill" style="color:var(--primary)"></i> Jakarta, Indonesia</span>
+        <span><i class="bi bi-shield-check-fill" style="color:var(--primary)"></i> ISO 27001 Certified</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== SCROLL TO TOP ===== -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  // ===== AOS INIT =====
+  AOS.init({ once: true, offset: 80, duration: 700 });
+
+  // ===== NAVBAR SCROLL SHADOW =====
+  const navbar = document.getElementById('mainNavbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ===== MOBILE HAMBURGER TOGGLE =====
+  const navToggler = document.getElementById('navToggler');
+  const navMenu    = document.getElementById('navbarMenu');
+  navToggler.addEventListener('click', () => {
+    const isOpen = navMenu.classList.contains('d-block');
+    navMenu.classList.toggle('d-none', isOpen);
+    navMenu.classList.toggle('d-block', !isOpen);
+    // When opening mobile, reset flex so it stacks
+    if (!isOpen) {
+      navMenu.style.flexDirection = 'column';
+      navMenu.style.alignItems    = 'flex-start';
+    }
+  });
+
+  // ===== MOBILE: accordion-style mega/dropdown toggle =====
+  if (window.innerWidth < 992) {
+    document.querySelectorAll('.has-mega > a, .has-dropdown > a').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const li    = trigger.closest('li');
+        const panel = li.querySelector('.mega-menu-wrap, .simple-dropdown-wrap');
+        if (panel) panel.classList.toggle('mobile-open');
+        const chevron = trigger.querySelector('.chevron');
+        if (chevron) chevron.style.transform = panel.classList.contains('mobile-open') ? 'rotate(180deg)' : '';
+      });
+    });
+  }
+
+  // ===== ACTIVE NAV on scroll =====
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.navbar-nav-main > li > a');
+
+  const sectionToHref = {
+    'features'       : '#features',
+    'how-it-works'   : '#how-it-works',
+    'business-types' : '#business-types',
+    'pricing'        : '#pricing',
+    'testimonials'   : '#testimonials',
+    'faq'            : '#faq',
+  };
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 130) current = s.id;
+    });
+    navLinks.forEach(l => {
+      l.classList.remove('active');
+      const href = l.getAttribute('href');
+      if (current && sectionToHref[current] === href) l.classList.add('active');
+      if (!current && href === '#') l.classList.add('active');
+    });
+  });
+
+  // ===== SCROLL TO TOP BUTTON =====
+  const scrollTopBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  // ===== COUNTER ANIMATION =====
+  function animateCounter(el) {
+    const target   = parseInt(el.getAttribute('data-target'));
+    const duration = 2000;
+    const step     = target / (duration / 16);
+    let count      = 0;
+    const timer = setInterval(() => {
+      count += step;
+      if (count >= target) { count = target; clearInterval(timer); }
+      el.textContent = Math.floor(count).toLocaleString('id-ID');
+    }, 16);
+  }
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { animateCounter(e.target); counterObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.counter').forEach(c => counterObs.observe(c));
+
+  // ===== FAQ ACCORDION =====
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item   = q.parentElement;
+      const answer = q.nextElementSibling;
+      const isOpen = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('active');
+        i.querySelector('.faq-answer').classList.remove('open');
+      });
+      if (!isOpen) { item.classList.add('active'); answer.classList.add('open'); }
+    });
+  });
+
+  // ===== PRICING TOGGLE =====
+  document.getElementById('pricingToggle').addEventListener('change', function() {
+    const isYearly = this.checked;
+    document.querySelectorAll('.price-amount').forEach(p => {
+      p.textContent = isYearly ? p.getAttribute('data-yearly') : p.getAttribute('data-monthly');
+    });
+  });
+
+  // ===== BUSINESS CHIPS =====
+  document.querySelectorAll('.biz-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.biz-chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ===== SMOOTH SCROLL =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const href   = this.getAttribute('href');
+      const target = href && href !== '#' ? document.querySelector(href) : null;
+      if (target) {
+        e.preventDefault();
+        const navH = navbar.offsetHeight;
+        window.scrollTo({ top: target.offsetTop - navH, behavior: 'smooth' });
+        // Close mobile nav
+        if (navMenu.classList.contains('d-block')) {
+          navMenu.classList.remove('d-block');
+          navMenu.classList.add('d-none');
+        }
+      }
+    });
+  });
+
+  // ===== CLOSE MEGA MENU when clicking outside =====
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.has-mega') && !e.target.closest('.has-dropdown')) {
+      document.querySelectorAll('.mega-menu-wrap, .simple-dropdown-wrap').forEach(m => {
+        m.classList.remove('mobile-open');
+      });
+    }
+  });
+</script>
+</body>
+</html>
